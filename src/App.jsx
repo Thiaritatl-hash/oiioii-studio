@@ -1,575 +1,513 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
-  Home,
+  Clapperboard,
   Sparkles,
   Wand2,
-  Film,
-  FolderOpen,
-  Library,
-  Palette,
   Image as ImageIcon,
-  Video,
-  Upload,
-  Dice5,
-  ChevronRight,
-  ChevronLeft,
-  Play,
-  Plus,
-  Trash2,
   Download,
-  Sun,
-  Contrast,
-  Thermometer,
-  Droplets,
-  SlidersHorizontal,
-  Layers,
-  Type,
-  Eraser,
-  Crop,
-  RotateCw,
-  Maximize2,
-  Check,
-  Clock3,
-  Camera,
-  Clapperboard,
-  UserRound,
-  Map,
-  Crown,
-  Settings2,
-  X,
-  Zap,
+  Loader2,
+  Lightbulb,
+  Palette,
+  Smartphone,
+  Monitor,
+  AlertCircle,
+  CheckCircle2,
+  RefreshCw,
 } from "lucide-react";
 
-/* =========================================================
-   OIIOII STUDIO
-   Primera versión funcional - Mobile First
-   ========================================================= */
-
-const styles = [
+const estilos = [
+  {
+    id: "cinematic",
+    nombre: "Cinemático",
+    descripcion: "Película de alto presupuesto",
+    prompt: "cinematic film still, professional cinematography, dramatic composition, highly detailed",
+  },
   {
     id: "anime",
-    name: "Anime",
-    category: "Ilustración",
-    image:
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=900&auto=format&fit=crop",
-    prompt: "anime cinematográfico, líneas limpias, expresiones dinámicas",
+    nombre: "Anime",
+    descripcion: "Anime moderno",
+    prompt: "high quality modern anime style, detailed anime illustration, cinematic composition",
   },
   {
     id: "pixel",
-    name: "Pixel Art",
-    category: "Retro",
-    image:
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=900&auto=format&fit=crop",
-    prompt: "pixel art detallado, estética retro, iluminación de videojuego",
-  },
-  {
-    id: "3d",
-    name: "3D Cinemático",
-    category: "Render",
-    image:
-      "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=900&auto=format&fit=crop",
-    prompt: "animación 3D cinematográfica, materiales detallados, iluminación profesional",
-  },
-  {
-    id: "cyberpunk",
-    name: "Cyberpunk",
-    category: "Cinemático",
-    image:
-      "https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=900&auto=format&fit=crop",
-    prompt: "cyberpunk, neón, lluvia, ciudad futurista, ambiente cinematográfico",
+    nombre: "Pixel Art",
+    descripcion: "Arte pixelado",
+    prompt: "detailed pixel art, carefully crafted pixels, retro game aesthetic, cinematic composition",
   },
   {
     id: "fantasy",
-    name: "Fantasía",
-    category: "Fantástico",
-    image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=900&auto=format&fit=crop",
-    prompt: "fantasía cinematográfica, naturaleza mágica, luz volumétrica",
+    nombre: "Fantasía",
+    descripcion: "Mundo fantástico",
+    prompt: "epic fantasy concept art, magical atmosphere, highly detailed environment, cinematic lighting",
   },
   {
-    id: "comic",
-    name: "Cómic",
-    category: "Ilustración",
-    image:
-      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=80&w=900&auto=format&fit=crop",
-    prompt: "comic book, tinta marcada, colores intensos, composición dramática",
+    id: "cyberpunk",
+    nombre: "Cyberpunk",
+    descripcion: "Neón futurista",
+    prompt: "cyberpunk futuristic city, neon lights, rain, atmospheric cinematic lighting, highly detailed",
+  },
+  {
+    id: "ghibli",
+    nombre: "Animación artesanal",
+    descripcion: "Fantasía dibujada",
+    prompt: "hand-drawn animated film aesthetic, whimsical fantasy environment, soft cinematic atmosphere",
   },
 ];
 
-const randomPrompts = [
-  "Una exploradora descubre una ciudad flotante sobre las nubes al amanecer.",
-  "Un pequeño robot atraviesa un bosque iluminado por criaturas bioluminiscentes.",
-  "Una detective camina bajo la lluvia por una megaciudad cyberpunk.",
-  "Dos viajeros encuentran una estación espacial abandonada en los límites de la galaxia.",
-  "Un guerrero protege una aldea mientras aparece una enorme luna roja.",
-  "Una adolescente descubre que las pinturas de su habitación cobran vida durante la noche.",
+const iluminaciones = [
+  "Cinemática",
+  "Neón",
+  "Atardecer dorado",
+  "Luz suave",
+  "Noche",
+  "Contraluz dramático",
+  "Estudio profesional",
 ];
 
-const toolGroups = [
+const formatos = [
   {
-    title: "Imagen",
-    tools: [
-      { id: "brightness", label: "Brillo", icon: Sun },
-      { id: "contrast", label: "Contraste", icon: Contrast },
-      { id: "temperature", label: "Temperatura", icon: Thermometer },
-      { id: "saturation", label: "Saturación", icon: Droplets },
-    ],
+    id: "16:9",
+    nombre: "Horizontal",
+    icon: Monitor,
   },
   {
-    title: "Transformar",
-    tools: [
-      { id: "crop", label: "Recortar", icon: Crop },
-      { id: "rotate", label: "Rotar", icon: RotateCw },
-      { id: "resize", label: "Tamaño", icon: Maximize2 },
-    ],
+    id: "9:16",
+    nombre: "Vertical",
+    icon: Smartphone,
   },
   {
-    title: "Creativo",
-    tools: [
-      { id: "layers", label: "Capas", icon: Layers },
-      { id: "text", label: "Texto", icon: Type },
-      { id: "remove-bg", label: "Quitar fondo", icon: Eraser },
-    ],
+    id: "1:1",
+    nombre: "Cuadrado",
+    icon: ImageIcon,
   },
 ];
 
-function App() {
-  const [activeTab, setActiveTab] = useState("home");
+const ideas = [
+  "Una joven descubre una ciudad escondida debajo de su propia ciudad.",
+  "Un robot solitario encuentra una pequeña flor creciendo entre edificios abandonados.",
+  "Una exploradora llega a un planeta cubierto completamente por océanos.",
+  "Un detective camina bajo la lluvia por una megaciudad iluminada con neón.",
+  "Un grupo de amigos descubre una puerta misteriosa dentro de un bosque ancestral.",
+  "Una astronauta observa una enorme estructura desconocida flotando sobre un planeta.",
+];
+
+export function App() {
   const [prompt, setPrompt] = useState("");
-  const [selectedStyle, setSelectedStyle] = useState("anime");
-  const [generationType, setGenerationType] = useState("image");
-  const [aspect, setAspect] = useState("16:9");
-  const [duration, setDuration] = useState("10s");
+  const [estilo, setEstilo] = useState(estilos[0]);
+  const [iluminacion, setIluminacion] = useState("Cinemática");
+  const [formato, setFormato] = useState("16:9");
+
   const [generating, setGenerating] = useState(false);
-  const [generated, setGenerated] = useState(null);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  const [projects, setProjects] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("oiioii-projects") || "[]");
-    } catch {
-      return [];
-    }
-  });
+  const generarIdea = () => {
+    const idea = ideas[Math.floor(Math.random() * ideas.length)];
+    setPrompt(idea);
+    setError("");
+  };
 
-  const [editorImage, setEditorImage] = useState(
-    "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=1200&auto=format&fit=crop"
-  );
-
-  const [adjustments, setAdjustments] = useState({
-    brightness: 100,
-    contrast: 100,
-    temperature: 0,
-    saturation: 100,
-  });
-
-  const [activeTool, setActiveTool] = useState(null);
-  const [notification, setNotification] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("oiioii-projects", JSON.stringify(projects));
-  }, [projects]);
-
-  useEffect(() => {
-    if (!notification) return;
-
-    const timer = setTimeout(() => setNotification(""), 2500);
-    return () => clearTimeout(timer);
-  }, [notification]);
-
-  const selectedStyleData = useMemo(
-    () => styles.find((style) => style.id === selectedStyle),
-    [selectedStyle]
-  );
-
-  function showNotification(message) {
-    setNotification(message);
-  }
-
-  function randomPrompt() {
-    const value =
-      randomPrompts[Math.floor(Math.random() * randomPrompts.length)];
-
-    setPrompt(value);
-    showNotification("Idea cinematográfica generada ✨");
-  }
-
-  function selectStyle(style) {
-    setSelectedStyle(style.id);
-
+  const generarImagen = async () => {
     if (!prompt.trim()) {
-      setPrompt(style.prompt);
-    }
-
-    showNotification(`${style.name} seleccionado`);
-  }
-
-  function handleGenerate() {
-    if (!prompt.trim()) {
-      showNotification("Escribí una idea antes de generar.");
+      setError("Escribí una descripción antes de generar la imagen.");
       return;
     }
 
     setGenerating(true);
+    setError("");
+    setSuccess(false);
+    setGeneratedImage(null);
 
-    setTimeout(() => {
-      const newProject = {
-        id: Date.now(),
-        title: prompt.slice(0, 42) + (prompt.length > 42 ? "…" : ""),
-        prompt,
-        style: selectedStyleData.name,
-        type: generationType,
-        aspect,
-        duration,
-        image: selectedStyleData.image,
-        createdAt: new Date().toLocaleString("es-AR"),
-      };
+    const promptFinal = `
+Create a high quality original image for an animation production.
 
-      setProjects((prev) => [newProject, ...prev]);
+Main scene:
+${prompt}
 
-      setGenerated(newProject);
-      setGenerating(false);
+Visual style:
+${estilo.prompt}
 
-      showNotification("Producción creada correctamente 🎬");
-    }, 1800);
-  }
+Lighting:
+${iluminacion}
 
-  function deleteProject(id) {
-    setProjects((prev) => prev.filter((project) => project.id !== id));
-    showNotification("Proyecto eliminado");
-  }
+Aspect ratio:
+${formato}
 
-  function loadProject(project) {
-    setPrompt(project.prompt);
-    setSelectedStyle(
-      styles.find((style) => style.name === project.style)?.id || "anime"
-    );
-    setGenerationType(project.type || "image");
-    setAspect(project.aspect || "16:9");
-    setDuration(project.duration || "10s");
+Important:
+Professional composition.
+Strong visual storytelling.
+Detailed characters and environment.
+Consistent anatomy.
+Cinematic framing.
+High quality rendering.
+No text, no logos, no watermarks.
+`;
 
-    setActiveTab("create");
-    showNotification("Proyecto cargado en el Studio");
-  }
+    try {
+      const response = await fetch("/.netlify/functions/generate-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: promptFinal,
+        }),
+      });
 
-  function updateAdjustment(key, value) {
-    setAdjustments((prev) => ({
-      ...prev,
-      [key]: Number(value),
-    }));
-  }
+      const data = await response.json();
 
-  function handleEditorTool(tool) {
-    setActiveTool(tool.id);
+      if (!response.ok) {
+        throw new Error(
+          data?.error || "No se pudo generar la imagen."
+        );
+      }
 
-    if (tool.id === "remove-bg") {
-      showNotification("Herramienta IA de quitar fondo preparada");
-    } else if (tool.id === "text") {
-      showNotification("Herramienta de texto activada");
-    } else if (tool.id === "layers") {
-      showNotification("Panel de capas activado");
-    } else if (tool.id === "crop") {
-      showNotification("Modo recorte activado");
-    } else if (tool.id === "rotate") {
-      showNotification("Imagen rotada 90°");
-      setEditorImage(
-        `${editorImage}${editorImage.includes("?") ? "&" : "?"}rotate=90`
+      if (!data.image) {
+        throw new Error("Gemini no devolvió ninguna imagen.");
+      }
+
+      const mimeType = data.mimeType || "image/png";
+
+      setGeneratedImage(
+        `data:${mimeType};base64,${data.image}`
       );
-    } else if (tool.id === "resize") {
-      showNotification("Herramienta de tamaño activada");
-    }
-  }
 
-  const editorFilter = {
-    filter: `
-      brightness(${adjustments.brightness}%)
-      contrast(${adjustments.contrast}%)
-      saturate(${adjustments.saturation}%)
-      sepia(${Math.max(0, adjustments.temperature / 5)}%)
-    `,
+      setSuccess(true);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.message ||
+          "Ocurrió un error al conectar con el generador de IA."
+      );
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const descargarImagen = () => {
+    if (!generatedImage) return;
+
+    const link = document.createElement("a");
+    link.href = generatedImage;
+    link.download = `oiioii-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans pb-24">
-      {/* =====================================================
-          HEADER
-         ===================================================== */}
+    <div className="min-h-screen bg-black text-white font-sans">
+
+      {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-zinc-900 bg-black/90 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => setActiveTab("home")}
-            className="flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-600 flex items-center justify-center shadow-lg shadow-fuchsia-900/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-purple-600 flex items-center justify-center shadow-lg shadow-pink-500/20">
               <Clapperboard className="w-5 h-5" />
             </div>
 
-            <div className="text-left">
-              <h1 className="font-black tracking-tight">
-                OIIOII <span className="text-fuchsia-500">STUDIO</span>
+            <div>
+              <h1 className="font-black tracking-tight text-lg">
+                OIIOII <span className="text-pink-500">STUDIO</span>
               </h1>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-widest">
+
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500">
                 AI Creative Studio
               </p>
             </div>
-          </button>
+          </div>
 
-          <button
-            onClick={() => showNotification("Cuenta preparada para Premium")}
-            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 text-fuchsia-300 text-xs font-bold"
-          >
-            <Crown className="w-4 h-4" />
-            PRO
-          </button>
+          <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-400 border border-emerald-500/20 bg-emerald-500/5 rounded-full px-3 py-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            IA conectada
+          </div>
+
         </div>
       </header>
 
-      {/* =====================================================
-          NOTIFICACIÓN
-         ===================================================== */}
-      {notification && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[100] bg-zinc-900 border border-zinc-700 px-4 py-3 rounded-xl shadow-2xl text-sm flex items-center gap-2 max-w-[90%]">
-          <Check className="w-4 h-4 text-fuchsia-400 shrink-0" />
-          <span>{notification}</span>
-        </div>
-      )}
 
-      {/* =====================================================
-          CONTENIDO
-         ===================================================== */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        {/* ========================= HOME ========================= */}
-        {activeTab === "home" && (
-          <div className="space-y-8">
-            <section className="relative overflow-hidden rounded-3xl border border-zinc-900 bg-zinc-950 p-6 sm:p-10">
-              <div className="absolute -top-32 -right-20 w-80 h-80 bg-fuchsia-600/15 blur-3xl rounded-full" />
-              <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-purple-600/10 blur-3xl rounded-full" />
+      {/* CONTENIDO */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-300 text-xs font-bold mb-5">
-                  <Zap className="w-3.5 h-3.5" />
-                  STUDIO IA
-                </div>
-
-                <h2 className="text-3xl sm:text-5xl font-black leading-tight max-w-3xl">
-                  Convertí tus ideas en{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-purple-400">
-                    imágenes, escenas y películas.
-                  </span>
-                </h2>
-
-                <p className="mt-4 text-zinc-400 max-w-2xl text-sm sm:text-base leading-relaxed">
-                  Un espacio creativo pensado para crear desde el celular:
-                  generación IA, edición visual, estilos, personajes,
-                  escenarios y proyectos cinematográficos.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-3 mt-7">
-                  <button
-                    onClick={() => setActiveTab("create")}
-                    className="flex-1 sm:flex-none px-6 py-3.5 rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-600 font-bold shadow-lg shadow-fuchsia-900/30 flex items-center justify-center gap-2"
-                  >
-                    <Sparkles className="w-5 h-5" />
-                    Empezar a crear
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab("editor")}
-                    className="flex-1 sm:flex-none px-6 py-3.5 rounded-xl bg-zinc-900 border border-zinc-800 font-bold flex items-center justify-center gap-2"
-                  >
-                    <Palette className="w-5 h-5" />
-                    Abrir editor
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <SectionTitle
-                icon={<Sparkles className="w-5 h-5" />}
-                title="¿Qué querés crear?"
-              />
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <QuickAction
-                  icon={<ImageIcon />}
-                  title="Imagen IA"
-                  text="Crear una imagen"
-                  onClick={() => {
-                    setGenerationType("image");
-                    setActiveTab("create");
-                  }}
-                />
-
-                <QuickAction
-                  icon={<Video />}
-                  title="Video IA"
-                  text="Crear una escena"
-                  onClick={() => {
-                    setGenerationType("video");
-                    setActiveTab("create");
-                  }}
-                />
-
-                <QuickAction
-                  icon={<Film />}
-                  title="Película"
-                  text="Planificar proyecto"
-                  onClick={() => {
-                    setDuration("100+ min");
-                    setActiveTab("create");
-                  }}
-                />
-
-                <QuickAction
-                  icon={<Palette />}
-                  title="Editar"
-                  text="Editar una imagen"
-                  onClick={() => setActiveTab("editor")}
-                />
-              </div>
-            </section>
-
-            <section>
-              <SectionTitle
-                icon={<Palette className="w-5 h-5" />}
-                title="Estilos populares"
-                action="Ver todos"
-                onAction={() => setActiveTab("styles")}
-              />
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {styles.map((style) => (
-                  <StyleCard
-                    key={style.id}
-                    style={style}
-                    compact
-                    onClick={() => {
-                      selectStyle(style);
-                      setActiveTab("create");
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
+        {/* TITULO */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 text-pink-500 text-xs font-bold uppercase tracking-widest mb-3">
+            <Sparkles className="w-4 h-4" />
+            Generador creativo
           </div>
-        )}
 
-        {/* ========================= CREATE ========================= */}
-        {activeTab === "create" && (
-          <div className="space-y-6">
-            <PageHeader
-              title="Crear con IA"
-              subtitle="Diseñá tu escena y prepará la generación."
-              icon={<Sparkles />}
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+            Creá cualquier cosa con IA.
+          </h2>
+
+          <p className="text-zinc-500 mt-2 text-sm sm:text-base max-w-2xl">
+            Diseñá personajes, escenarios, concept art e imágenes para tus
+            proyectos de animación.
+          </p>
+        </div>
+
+
+        {/* GENERADOR */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+          {/* PANEL DE CONTROLES */}
+          <div className="lg:col-span-2 bg-zinc-950 border border-zinc-900 rounded-2xl p-5 sm:p-6">
+
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold flex items-center gap-2">
+                <Wand2 className="w-4 h-4 text-pink-500" />
+                Crear imagen
+              </h3>
+
+              <button
+                onClick={generarIdea}
+                className="text-xs text-zinc-500 hover:text-pink-400 transition flex items-center gap-1"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Idea
+              </button>
+            </div>
+
+
+            {/* PROMPT */}
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+              ¿Qué querés crear?
+            </label>
+
+            <textarea
+              value={prompt}
+              onChange={(e) => {
+                setPrompt(e.target.value);
+                setError("");
+              }}
+              placeholder="Describí tu escena, personaje o idea..."
+              className="w-full h-32 bg-black border border-zinc-800 rounded-xl p-4 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-pink-500 transition resize-none"
             />
 
-            <section className="grid lg:grid-cols-3 gap-5">
-              <div className="lg:col-span-2 space-y-5">
-                <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-4 sm:p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <label className="text-sm font-bold">
-                      Describí tu escena
-                    </label>
 
+            {/* ESTILO */}
+            <div className="mt-5">
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+                <Palette className="w-3.5 h-3.5 inline mr-1" />
+                Estilo
+              </label>
+
+              <div className="grid grid-cols-2 gap-2">
+                {estilos.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setEstilo(item)}
+                    className={`text-left p-3 rounded-xl border transition ${
+                      estilo.id === item.id
+                        ? "border-pink-500 bg-pink-500/10"
+                        : "border-zinc-800 bg-black hover:border-zinc-600"
+                    }`}
+                  >
+                    <div className="text-sm font-semibold">
+                      {item.nombre}
+                    </div>
+
+                    <div className="text-[10px] text-zinc-500 mt-0.5">
+                      {item.descripcion}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+
+            {/* ILUMINACION */}
+            <div className="mt-5">
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+                <Lightbulb className="w-3.5 h-3.5 inline mr-1" />
+                Iluminación
+              </label>
+
+              <select
+                value={iluminacion}
+                onChange={(e) => setIluminacion(e.target.value)}
+                className="w-full bg-black border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 focus:outline-none focus:border-pink-500"
+              >
+                {iluminaciones.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+
+            {/* FORMATO */}
+            <div className="mt-5">
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
+                Formato
+              </label>
+
+              <div className="grid grid-cols-3 gap-2">
+                {formatos.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
                     <button
-                      onClick={randomPrompt}
-                      className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-fuchsia-400"
-                      title="Idea aleatoria"
+                      key={item.id}
+                      onClick={() => setFormato(item.id)}
+                      className={`p-3 rounded-xl border text-center transition ${
+                        formato === item.id
+                          ? "border-purple-500 bg-purple-500/10 text-purple-300"
+                          : "border-zinc-800 text-zinc-500 hover:border-zinc-600"
+                      }`}
                     >
-                      <Dice5 className="w-5 h-5" />
+                      <Icon className="w-4 h-4 mx-auto mb-1" />
+                      <span className="text-[10px] font-semibold">
+                        {item.nombre}
+                      </span>
+                      <span className="block text-[9px] opacity-60 mt-0.5">
+                        {item.id}
+                      </span>
                     </button>
-                  </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                  <textarea
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Ej. Una joven camina por una megaciudad cyberpunk durante una tormenta, luces de neón reflejadas en el pavimento..."
-                    className="w-full min-h-36 bg-black border border-zinc-800 rounded-xl p-4 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-fuchsia-500 resize-none"
-                  />
 
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {[
-                      "Cinemático",
-                      "Iluminación dramática",
-                      "Plano general",
-                      "Alta calidad",
-                    ].map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={() =>
-                          setPrompt((prev) =>
-                            prev
-                              ? `${prev}, ${tag.toLowerCase()}`
-                              : tag.toLowerCase()
-                          )
-                        }
-                        className="text-xs px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400"
-                      >
-                        + {tag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+            {/* ERROR */}
+            {error && (
+              <div className="mt-5 p-3 rounded-xl border border-red-500/20 bg-red-500/5 text-red-300 text-xs flex gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
-                <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-4 sm:p-6">
-                  <label className="text-sm font-bold block mb-3">
-                    Referencia visual
-                  </label>
 
-                  <label className="border-2 border-dashed border-zinc-800 hover:border-fuchsia-500 rounded-xl min-h-32 flex flex-col items-center justify-center text-center cursor-pointer transition">
-                    <Upload className="w-7 h-7 text-zinc-600 mb-2" />
-                    <span className="text-sm text-zinc-300">
-                      Subir imagen o video
-                    </span>
-                    <span className="text-xs text-zinc-600 mt-1">
-                      JPG, PNG, WEBP, MP4
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*,video/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          showNotification(
-                            `Referencia "${e.target.files[0].name}" cargada`
-                          );
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
+            {/* BOTON */}
+            <button
+              onClick={generarImagen}
+              disabled={generating}
+              className="w-full mt-5 py-3.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-pink-500/10 transition"
+            >
+              {generating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generando imagen...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generar con IA
+                </>
+              )}
+            </button>
+
+          </div>
+
+
+          {/* PREVISUALIZACION */}
+          <div className="lg:col-span-3 bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden min-h-[420px]">
+
+            <div className="border-b border-zinc-900 px-5 py-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-sm">
+                  Resultado
+                </h3>
+
+                <p className="text-[10px] text-zinc-600 mt-0.5">
+                  {estilo.nombre} · {formato}
+                </p>
               </div>
 
-              <div className="space-y-5">
-                <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-4">
-                  <label className="text-xs uppercase tracking-wider text-zinc-500 font-bold">
-                    Tipo
-                  </label>
+              {generatedImage && (
+                <button
+                  onClick={descargarImagen}
+                  className="px-3 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold flex items-center gap-2 transition"
+                >
+                  <Download className="w-4 h-4" />
+                  Guardar
+                </button>
+              )}
+            </div>
 
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    <ChoiceButton
-                      active={generationType === "image"}
-                      icon={<ImageIcon />}
-                      text="Imagen"
-                      onClick={() => setGenerationType("image")}
-                    />
-                    <ChoiceButton
-                      active={generationType === "video"}
-                      icon={<Video />}
-                      text="Video"
-                      onClick={() => setGenerationType("video")}
-                    />
+
+            <div className="p-4 h-[calc(100%-69px)] min-h-[350px] flex items-center justify-center">
+
+              {generating ? (
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="w-7 h-7 text-pink-500 animate-pulse" />
                   </div>
+
+                  <h4 className="font-bold">
+                    Creando tu imagen...
+                  </h4>
+
+                  <p className="text-xs text-zinc-600 mt-1">
+                    La IA está interpretando tu dirección artística.
+                  </p>
                 </div>
+              ) : generatedImage ? (
+                <div className="w-full h-full flex flex-col items-center justify-center">
 
-                <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-4">
-                  <label className="text-xs uppercase tracking-wider text-zinc-500 font-bold">
-                    Estilo
-                  </label>
+                  <img
+                    src={generatedImage}
+                    alt="Imagen generada por Oiioii Studio"
+                    className="max-w-full max-h-[500px] object-contain rounded-xl border border-zinc-800 shadow-2xl"
+                  />
 
-                  <div className="grid grid-cols-2 gap-2 mt-3">
-                    {styles.map((style) => (
-                      <button
-                        key={style.id}
-                        onClick={() => selectStyle(style)}
-                        className={`relative overflo
+                  {success && (
+                    <div className="mt-3 text-xs text-emerald-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Imagen generada correctamente
+                    </div>
+                  )}
+
+                </div>
+              ) : (
+                <div className="text-center max-w-sm">
+
+                  <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-4">
+                    <ImageIcon className="w-7 h-7 text-zinc-700" />
+                  </div>
+
+                  <h4 className="font-bold text-zinc-400">
+                    Tu creación aparecerá acá
+                  </h4>
+
+                  <p className="text-xs text-zinc-600 mt-2">
+                    Escribí una idea, elegí un estilo y presioná
+                    "Generar con IA".
+                  </p>
+
+                </div>
+              )}
+
+            </div>
+          </div>
+
+        </div>
+
+
+        {/* IDEAS RAPIDAS */}
+        <section className="mt-8">
+
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-lg">
+              Ideas rápidas
+            </h3>
+
+            <span className="text-xs text-zinc-600">
+              Tocá una para usarla
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+
+            {ideas.map((idea, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setPrompt(idea);
+                  setError("");
+                }}
+                className="text-left p-4 rounded-xl border border-zinc-900 bg-z
