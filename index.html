@@ -3,62 +3,94 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Oiioii Studio - AI Animation Studio</title>
-    <meta name="description" content="Oiioii Studio — Tu plataforma de animación e historias con inteligencia artificial">
+    <title>Oiioii Studio - AI Animation Hub</title>
+    <meta name="description" content="Oiioii Studio — Plataforma profesional de animación e historias con IA">
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 75px; }
+        body { background-color: #000000; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 85px; }
         
         /* Barra superior */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #121826; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-        .logo-title { font-weight: 800; color: #ffffff; font-size: 1.3rem; letter-spacing: -0.5px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #080808; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
+        .logo-title { font-weight: 800; color: #ffffff; font-size: 1.4rem; letter-spacing: -0.5px; }
         .logo-title span { color: #db2777; }
-        .studio-badge { background: #1e293b; color: #db2777; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid #db2777; }
+        .studio-badge { background: #141414; color: #db2777; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid #db2777; }
+        .credits-counter { background: #121212; color: #a855f7; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid #9333ea; display: flex; align-items: center; gap: 5px; }
 
         /* Contenido principal */
-        main { padding: 20px 16px; flex: 1; max-width: 800px; margin: 0 auto; width: 100%; }
+        main { padding: 24px 16px; flex: 1; max-width: 960px; margin: 0 auto; width: 100%; }
 
         /* Vistas de la aplicación */
         .view-section { display: none; }
         .view-section.active { display: block; }
 
-        .creator-box { background: #121826; border: 1px solid #1e293b; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
-        .creator-box h2 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
-        .creator-box p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px; }
+        /* Creador Principal */
+        .creator-box { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 20px; padding: 24px; margin-bottom: 32px; box-shadow: 0 0 30px rgba(219, 39, 119, 0.05); }
+        .creator-box h2 { font-size: 1.3rem; margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .creator-box p { color: #888888; font-size: 0.95rem; margin-bottom: 20px; }
         
-        .dropzone { border: 2px dashed #334155; border-radius: 12px; padding: 20px; text-align: center; background: #0b0f19; color: #94a3b8; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; font-size: 0.9rem; }
+        .dropzone { border: 2px dashed #262626; border-radius: 12px; padding: 20px; text-align: center; background: #000000; color: #888888; cursor: pointer; transition: border-color 0.2s; font-size: 0.9rem; margin-bottom: 16px; }
         .dropzone:hover { border-color: #db2777; color: #fff; }
         
-        .prompt-input { width: 100%; background: #0b0f19; border: 1px solid #334155; border-radius: 8px; padding: 14px; color: white; font-size: 0.95rem; resize: none; outline: none; margin-bottom: 12px; }
+        .prompt-container { position: relative; margin-bottom: 16px; }
+        .prompt-input { width: 100%; background: #000000; border: 1px solid #262626; border-radius: 12px; padding: 16px; padding-right: 48px; color: white; font-size: 1rem; resize: none; outline: none; }
         .prompt-input:focus { border-color: #db2777; }
+        .btn-dice { position: absolute; right: 12px; top: 14px; background: transparent; border: none; font-size: 1.3rem; cursor: pointer; transition: transform 0.2s; }
+        .btn-dice:hover { transform: scale(1.2); }
 
-        .btn-generate { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3); }
-        .btn-generate:hover { opacity: 0.9; }
+        /* Panel de Control de Parámetros */
+        .control-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .control-group { background: #000000; border: 1px solid #262626; border-radius: 12px; padding: 12px; }
+        .control-group label { display: block; font-size: 0.75rem; color: #888888; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
+        .control-select { width: 100%; background: #0c0c0c; color: white; border: 1px solid #333; padding: 8px; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .control-select:focus { border-color: #db2777; }
 
-        /* Carrusel de Estilos */
-        .section-header { font-size: 1.1rem; font-weight: bold; margin-bottom: 14px; color: #f8fafc; }
-        .carousel { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
-        .carousel::-webkit-scrollbar { height: 6px; }
-        .carousel::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        
-        .style-card { min-width: 240px; height: 160px; border-radius: 14px; position: relative; overflow: hidden; cursor: pointer; scroll-snap-align: start; border: 1px solid #1e293b; }
-        .style-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .style-card:hover img { transform: scale(1.05); }
-        
-        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 15px 12px 15px; }
-        .card-overlay h3 { color: #fff; font-size: 1rem; margin-bottom: 4px; }
-        .card-overlay p { color: #db2777; font-size: 0.8rem; font-weight: bold; }
+        .btn-generate { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 6px 20px rgba(219, 39, 119, 0.4); }
+        .btn-generate:hover { opacity: 0.95; }
 
-        /* Estilos para las vistas secundarias (Proyectos, Recursos, Estilos) */
-        .content-panel { background: #121826; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; text-align: center; margin-top: 10px; }
-        .content-panel h2 { font-size: 1.3rem; margin-bottom: 10px; color: #fff; }
-        .content-panel p { color: #94a3b8; font-size: 0.95rem; }
+        /* Línea de tiempo de escenas */
+        .timeline-box { background: #080808; border: 1px solid #1a1a1a; border-radius: 16px; padding: 16px; margin-top: 20px; }
+        .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .timeline-header h4 { font-size: 0.95rem; color: #fff; }
+        .btn-add-scene { background: #141414; color: #db2777; border: 1px solid #db2777; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .scenes-list { display: flex; flex-direction: column; gap: 8px; }
+        .scene-card { background: #000; border: 1px solid #262626; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #ccc; }
+        .scene-card span { color: #db2777; font-weight: 600; }
 
-        /* Barra de navegación inferior */
-        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b0f19; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; font-size: 0.7rem; cursor: pointer; gap: 5px; font-weight: 500; transition: color 0.2s; }
-        .nav-item.active { color: #db2777; }
+        /* Comparador de Estilos */
+        .comparator-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .comparator-pane { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 14px; padding: 14px; text-align: center; }
+        .comparator-pane h5 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+        .comparator-pane img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+
+        /* Estado Vacío (Sin proyectos) */
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
+        .empty-state span { font-size: 3rem; display: block; margin-bottom: 12px; }
+        .empty-state h4 { color: #fff; font-size: 1.1rem; margin-bottom: 6px; }
+        .empty-state p { font-size: 0.9rem; color: #888; }
+
+        /* Estructura de Galerías */
+        .section-header { font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; color: #f8fafc; }
+        .gallery-category { margin-bottom: 36px; }
+        .category-title { font-size: 1.05rem; color: #888888; margin-bottom: 16px; font-weight: 600; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 18px; }
+        .grid-item { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 16px; overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.2s; position: relative; }
+        .grid-item:hover { border-color: #db2777; transform: translateY(-4px); }
+        .grid-item img { width: 100%; height: 115px; object-fit: cover; display: block; background-color: #141414; }
+        .grid-item-content { padding: 12px; }
+        .grid-item-content h4 { font-size: 0.9rem; color: #fff; margin-bottom: 4px; font-weight: 700; }
+        .grid-item-content p { font-size: 0.78rem; color: #db2777; font-weight: 600; line-height: 1.3; }
+
+        /* Paneles Estándar */
+        .content-panel { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
+        .content-panel h2 { font-size: 1.4rem; margin-bottom: 8px; color: #fff; }
+        .content-panel p { color: #888888; font-size: 0.95rem; }
+
+        /* Barra de Navegación Inferior */
+        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000000; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #777777; font-size: 0.75rem; cursor: pointer; gap: 5px; font-weight: 500; transition: color 0.2s; }
+        .nav-item:hover, .nav-item.active { color: #db2777; }
     </style>
 </head>
 <body>
@@ -66,82 +98,157 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <div class="logo-title">oii<span>oii</span> Studio</div>
-        <div class="studio-badge">AI Engine v5.0</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="credits-counter">⚡ 1,500 Créditos</div>
+            <div class="studio-badge">Director v5.5</div>
+        </div>
     </div>
 
     <main>
-        <!-- VISTA 1: EXPLORAR (Principal) -->
+        <!-- VISTA 1: EXPLORAR -->
         <div id="view-explorar" class="view-section active">
             <div class="creator-box">
-                <h2>Crear Historia Animada</h2>
-                <p>Sube una imagen de referencia y describe los detalles de tu escena.</p>
+                <h2>Crear Animación o Largometraje <span>🎬</span></h2>
+                <p>Escribe tu historia, configura la duración y activa la IA para producir tu obra maestra.</p>
                 
-                <div class="dropzone" onclick="alert('Selecciona una imagen multimedia...')">
-                    📷 Toca aquí para cargar imagen base
+                <div class="dropzone" onclick="alert('Selecciona imagen de referencia o guion gráfico...')">
+                    📷 Cargar diseño base o guion gráfico del personaje
                 </div>
 
-                <textarea class="prompt-input" rows="3" id="story-prompt" placeholder="Ej: Un joven héroe con armadura cyberpunk explorando ruinas futuristas..."></textarea>
-                
-                <button class="btn-generate" onclick="crearVideo()">Generar Video con IA 🎬</button>
+                <div class="prompt-container">
+                    <textarea class="prompt-input" rows="4" id="story-prompt" placeholder="Ej: Un joven héroe con armadura cyberpunk explorando ruinas futuristas en un largometraje épico..."></textarea>
+                    <button class="btn-dice" onclick="generarInspiracion()" title="Generar idea aleatoria">🎲</button>
+                </div>
+
+                <div class="control-panel-grid">
+                    <div class="control-group">
+                        <label>Duración del Proyecto</label>
+                        <select class="control-select" id="project-duration">
+                            <option value="clip">Micro-clip (5s - 30s)</option>
+                            <option value="corto">Cortometraje (5 - 15 min)</option>
+                            <option value="pelicula" selected>Largometraje (60 - 100+ min)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Relación de Aspecto</label>
+                        <select class="control-select" id="project-aspect">
+                            <option value="cine">Cine Panorámico (2.39:1)</option>
+                            <option value="youtube">Horizontal YouTube (16:9)</option>
+                            <option value="vertical">Vertical Redes (9:16)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-generate" onclick="crearVideo()">Generar Producción con IA ✨</button>
+
+                <div class="timeline-box">
+                    <div class="timeline-header">
+                        <h4>Línea de Tiempo de Escenas (Acto I)</h4>
+                        <button class="btn-add-scene" onclick="agregarEscena()">+ Escena</button>
+                    </div>
+                    <div class="scenes-list" id="scenes-container">
+                        <div class="scene-card"><span>Escena 01</span> Introducción a la Megaciudad (00:00 - 15:00)</div>
+                        <div class="scene-card"><span>Escena 02</span> El despertar del Guerrero (15:00 - 45:00)</div>
+                    </div>
+                </div>
             </div>
 
-            <h3 class="section-header">Estilos de Animación</h3>
-            <div class="carousel">
-                <div class="style-card" onclick="seleccionarEstilo('Anime Japonés')">
-                    <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Anime">
-                    <div class="card-overlay">
-                        <h3>Anime Japonés</h3>
-                        <p>Probar estilo ✨</p>
-                    </div>
+            <h3 class="section-header">Comparativa de Estilos en Vivo</h3>
+            <div class="comparator-box">
+                <div class="comparator-pane">
+                    <h5>Opción A: Shonen Anime</h5>
+                    <img src="https://picsum.photos/seed/animecomp/500/300" alt="Anime">
+                    <button class="btn-add-scene" style="width:100%;" onclick="seleccionarEstilo('Shonen Anime')">Elegir Este</button>
                 </div>
-
-                <div class="style-card" onclick="seleccionarEstilo('Dibujos Animados')">
-                    <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cartoon">
-                    <div class="card-overlay">
-                        <h3>Dibujos Animados</h3>
-                        <p>Probar estilo ✨</p>
-                    </div>
+                <div class="comparator-pane">
+                    <h5>Opción B: Pixar 3D</h5>
+                    <img src="https://picsum.photos/seed/pixarcomp/500/300" alt="3D">
+                    <button class="btn-add-scene" style="width:100%;" onclick="seleccionarEstilo('Pixar 3D')">Elegir Este</button>
                 </div>
+            </div>
 
-                <div class="style-card" onclick="seleccionarEstilo('Animación 3D')">
-                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="3D">
-                    <div class="card-overlay">
-                        <h3>Animación 3D</h3>
-                        <p>Probar estilo ✨</p>
+            <h3 class="section-header">Explorador de Producción IA</h3>
+
+            <div class="gallery-category">
+                <h4 class="category-title">🔥 Estilos en Tendencia</h4>
+                <div class="gallery-grid">
+                    <div class="grid-item" onclick="seleccionarEstilo('Shonen Anime')">
+                        <img src="https://picsum.photos/seed/shonenanime/500/300" alt="Anime">
+                        <div class="grid-item-content"><h4>Shonen Anime</h4><p>Estilo Japonés</p></div>
                     </div>
-                </div>
-
-                <div class="style-card" onclick="seleccionarEstilo('Cyberpunk')">
-                    <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyberpunk">
-                    <div class="card-overlay">
-                        <h3>Cyberpunk / Neón</h3>
-                        <p>Probar estilo ✨</p>
+                    <div class="grid-item" onclick="seleccionarEstilo('Pixar 3D')">
+                        <img src="https://picsum.photos/seed/pixar3d/500/300" alt="3D">
+                        <div class="grid-item-content"><h4>Pixar 3D</h4><p>Render CGI</p></div>
+                    </div>
+                    <div class="grid-item" onclick="seleccionarEstilo('Cyberpunk Noir')">
+                        <img src="https://picsum.photos/seed/cyberpunknoir/500/300" alt="Cyberpunk">
+                        <div class="grid-item-content"><h4>Cyberpunk</h4><p>Neón y Futurista</p></div>
+                    </div>
+                    <div class="grid-item" onclick="seleccionarEstilo('Acuarela Tradicional')">
+                        <img src="https://picsum.photos/seed/watercolor/500/300" alt="Acuarela">
+                        <div class="grid-item-content"><h4>Acuarela</h4><p>Pintura Fluida</p></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA 2: PROYECTOS -->
+        <!-- VISTA 2: PROYECTOS (Dinámica: Vacía al inicio) -->
         <div id="view-proyectos" class="view-section">
             <div class="content-panel">
-                <h2>📁 Mis Proyectos</h2>
-                <p>Aquí aparecerán todas tus historias animadas creadas y borradores guardados próximamente.</p>
+                <h2>📁 Mis Proyectos y Largometrajes</h2>
+                <p>Gestiona tus películas animadas guardadas, borradores y renderizados de larga duración.</p>
+            </div>
+            
+            <div id="user-projects-container">
+                <div class="empty-state">
+                    <span>📂</span>
+                    <h4>No hay proyectos creados</h4>
+                    <p>Tus películas y animaciones generadas aparecerán aquí automáticamente.</p>
+                </div>
             </div>
         </div>
 
         <!-- VISTA 3: RECURSOS -->
         <div id="view-recursos" class="view-section">
             <div class="content-panel">
-                <h2>🖼️ Recursos Multimedia</h2>
-                <p>Librería de imágenes base, texturas y assets de audio listos para tus creaciones.</p>
+                <h2>🖼️ Librería de Recursos</h2>
+                <p>Usa escenarios, personajes fijos y efectos para mantener consistencia.</p>
+            </div>
+
+            <div class="gallery-category">
+                <h4 class="category-title">🏙️ Escenarios para Largometrajes</h4>
+                <div class="gallery-grid">
+                    <div class="grid-item" onclick="usarRecurso('Fondo: Megaciudad Neón')">
+                        <img src="https://picsum.photos/seed/neontown/500/300" alt="Ciudad Neón">
+                        <div class="grid-item-content"><h4>Megaciudad Neón</h4><p>Escenario Urbano</p></div>
+                    </div>
+                    <div class="grid-item" onclick="usarRecurso('Fondo: Estación Espacial Orbital')">
+                        <img src="https://picsum.photos/seed/spacestation/500/300" alt="Estación Espacial">
+                        <div class="grid-item-content"><h4>Estación Espacial</h4><p>Escenario Sci-Fi</p></div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- VISTA 4: ESTILOS -->
         <div id="view-estilos" class="view-section">
             <div class="content-panel">
-                <h2>✨ Catálogo de Estilos</h2>
-                <p>Explora la galería completa de renderizado y filtros avanzados impulsados por Inteligencia Artificial.</p>
+                <h2>✨ Catálogo Completo de Estilos</h2>
+                <p>Explora todos los modelos artísticos avanzados para renderizar tus producciones.</p>
+            </div>
+
+            <div class="gallery-category">
+                <h4 class="category-title">⛩️ Anime y Animación Japonesa</h4>
+                <div class="gallery-grid">
+                    <div class="grid-item" onclick="seleccionarEstilo('Shonen Moderno')">
+                        <img src="https://picsum.photos/seed/shonenmodern/500/300" alt="Shonen">
+                        <div class="grid-item-content"><h4>Shonen Moderno</h4><p>Líneas marcadas</p></div>
+                    </div>
+                    <div class="grid-item" onclick="seleccionarEstilo('Studio Ghibli')">
+                        <img src="https://picsum.photos/seed/ghiblistyle/500/300" alt="Ghibli">
+                        <div class="grid-item-content"><h4>Studio Ghibli</h4><p>Pintura tradicional</p></div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -167,40 +274,69 @@
     </nav>
 
     <script>
-        // Función para cambiar de pestaña dinámicamente
+        const ideasMagicas = [
+            "Un zorro samurái explorando un templo flotante en las nubes bajo un eclipse de sol.",
+            "Una tripulación de jóvenes científicos descubriendo una civilización submarina bioluminiscente.",
+            "Un androide rebelde tocando el violín en una azotea cyberpunk bajo una lluvia neón.",
+            "Un reino de caramelo amenazado por una bruja hecha de café oscuro y magia cósmica."
+        ];
+
+        // Almacén local de proyectos del usuario (inicia vacío)
+        let misProyectos = [];
+
         function cambiarVista(nombreVista, elementoNav) {
-            // Ocultar todas las vistas
             document.querySelectorAll('.view-section').forEach(seccion => {
                 seccion.classList.remove('active');
             });
-
-            // Mostrar la vista seleccionada
             document.getElementById('view-' + nombreVista).classList.add('active');
 
-            // Quitar la clase active de todos los botones de la barra inferior
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-
-            // Activar el botón tocado
-            elementoNav.classList.add('active');
+            if (elementoNav) {
+                elementoNav.classList.add('active');
+            }
         }
 
         function seleccionarEstilo(nombreEstilo) {
-            cambiarVista('explorar', document.querySelector('.nav-item'));
-            document.getElementById('story-prompt').value = "Estilo " + nombreEstilo + ": ";
+            cambiarVista('explorar', document.querySelectorAll('.nav-item')[0]);
+            const promptBox = document.getElementById('story-prompt');
+            promptBox.value = "Estilo cinematográfico " + nombreEstilo + ": ";
+            promptBox.focus();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function usarRecurso(nombreRecurso) {
+            cambiarVista('explorar', document.querySelectorAll('.nav-item')[0]);
+            const promptBox = document.getElementById('story-prompt');
+            promptBox.value = "Incluir " + nombreRecurso + " con consistencia de personaje: ";
+            promptBox.focus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function generarInspiracion() {
+            const promptBox = document.getElementById('story-prompt');
+            const ideaAleatoria = ideasMagicas[Math.floor(Math.random() * ideasMagicas.length)];
+            promptBox.value = ideaAleatoria;
+            promptBox.focus();
+        }
+
+        function agregarEscena() {
+            const container = document.getElementById('scenes-container');
+            const totalEscenas = container.children.length + 1;
+            const nuevaEscena = document.createElement('div');
+            nuevaEscena.className = 'scene-card';
+            nuevaEscena.innerHTML = `<span>Escena 0${totalEscenas}</span> Desarrollo de trama extendida (${(totalEscenas-1)*15}:00 - ${totalEscenas*15}:00)`;
+            container.appendChild(nuevaEscene = nuevaEscena);
         }
 
         function crearVideo() {
             const prompt = document.getElementById('story-prompt').value;
+            const duracion = document.getElementById('project-duration').value;
+            
             if(!prompt.trim()) {
-                alert("Por favor escribe una descripción para tu animación.");
+                alert("Por favor escribe una descripción para tu producción.");
                 return;
             }
-            alert("🪄 Procesando historia animada: \"" + prompt + "\"...");
-        }
-    </script>
 
-</body>
-</html>
+       
