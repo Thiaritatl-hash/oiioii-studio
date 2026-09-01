@@ -1,8 +1,9 @@
-export function App() {
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>¡Mi Estudio de Animación Funciona! 🚀</h1>
-      <p>Todo está conectado correctamente en Netlify.</p>
-    </div>
-  );
-}
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { App } from './App';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
