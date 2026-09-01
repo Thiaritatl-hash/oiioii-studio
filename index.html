@@ -1,73 +1,55 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es" translate="no" class="notranslate" data-theme="dark" data-theme-preference="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oiioii Studio - Animación de Historias con IA</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Oiioii Studio - AI Animation Studio</title>
+    <meta name="description" content="Oiioii Studio — Tu plataforma de animación e historias con inteligencia artificial">
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 85px; }
+        body { background-color: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 75px; }
         
-        /* Barra superior profesional */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #0b0f19; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .logo-title { font-weight: 800; color: #ffffff; font-size: 1.5rem; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px; }
+        /* Barra superior */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #121826; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
+        .logo-title { font-weight: 800; color: #ffffff; font-size: 1.3rem; letter-spacing: -0.5px; }
         .logo-title span { color: #db2777; }
-        .top-badge { background: #121826; border: 1px solid #1e293b; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; color: #94a3b8; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .studio-badge { background: #1e293b; color: #db2777; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid #db2777; }
 
-        /* Contenedor principal */
-        main { padding: 24px 16px; flex: 1; max-width: 850px; margin: 0 auto; width: 100%; }
+        /* Contenido principal */
+        main { padding: 20px 16px; flex: 1; max-width: 800px; margin: 0 auto; width: 100%; }
 
-        /* Panel de Creación Avanzado */
-        .creator-container { background: #121826; border: 1px solid #1e293b; border-radius: 20px; padding: 24px; margin-bottom: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .creator-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .creator-title { font-size: 1.3rem; font-weight: 700; color: #fff; }
-        .creator-badge-ai { background: rgba(219, 39, 119, 0.15); color: #db2777; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(219, 39, 119, 0.3); }
-
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
-        @media(min-width: 640px) {
-            .form-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; font-weight: 600; }
-        select { width: 100%; background: #0b0f19; border: 1px solid #334155; border-radius: 10px; padding: 12px; color: white; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
-        select:focus { border-color: #db2777; }
-
-        .dropzone { border: 2px dashed #334155; border-radius: 12px; padding: 24px; text-align: center; background: #0b0f19; color: #94a3b8; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; margin-bottom: 16px; }
-        .dropzone:hover { border-color: #db2777; color: #fff; background: rgba(219, 39, 119, 0.02); }
-
-        .prompt-input { width: 100%; background: #0b0f19; border: 1px solid #334155; border-radius: 10px; padding: 14px; color: white; font-size: 0.95rem; resize: none; outline: none; margin-bottom: 20px; transition: border-color 0.2s; }
+        .creator-box { background: #121826; border: 1px solid #1e293b; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+        .creator-box h2 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
+        .creator-box p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 16px; }
+        
+        .dropzone { border: 2px dashed #334155; border-radius: 12px; padding: 20px; text-align: center; background: #0b0f19; color: #94a3b8; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; font-size: 0.9rem; }
+        .dropzone:hover { border-color: #db2777; color: #fff; }
+        
+        .prompt-input { width: 100%; background: #0b0f19; border: 1px solid #334155; border-radius: 8px; padding: 14px; color: white; font-size: 0.95rem; resize: none; outline: none; margin-bottom: 12px; }
         .prompt-input:focus { border-color: #db2777; }
 
-        .btn-generate { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.05rem; box-shadow: 0 6px 20px rgba(219, 39, 119, 0.4); transition: opacity 0.2s, transform 0.1s; }
-        .btn-generate:hover { opacity: 0.95; }
-        .btn-generate:active { transform: scale(0.99); }
+        .btn-generate { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3); }
+        .btn-generate:hover { opacity: 0.9; }
 
-        /* Carrusel y Galerías de Estilos */
-        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: #f8fafc; display: flex; align-items: center; justify-content: space-between; }
-        .section-title span { font-size: 0.85rem; color: #db2777; cursor: pointer; font-weight: 600; }
-        
-        .carousel { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; margin-bottom: 32px; }
+        /* Carrusel de Estilos */
+        .section-header { font-size: 1.1rem; font-weight: bold; margin-bottom: 14px; color: #f8fafc; }
+        .carousel { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
         .carousel::-webkit-scrollbar { height: 6px; }
         .carousel::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         
-        .style-card { min-width: 250px; height: 170px; border-radius: 16px; position: relative; overflow: hidden; cursor: pointer; scroll-snap-align: start; border: 1px solid #1e293b; transition: transform 0.3s ease, border-color 0.3s ease; }
-        .style-card:hover { transform: translateY(-4px); border-color: #db2777; }
-        .style-card img { width: 100%; height: 100%; object-fit: cover; }
+        .style-card { min-width: 240px; height: 160px; border-radius: 14px; position: relative; overflow: hidden; cursor: pointer; scroll-snap-align: start; border: 1px solid #1e293b; }
+        .style-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .style-card:hover img { transform: scale(1.05); }
         
-        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(11,15,25,0.95), rgba(11,15,25,0.4), transparent); padding: 24px 16px 14px 16px; }
-        .card-overlay h3 { color: #fff; font-size: 1.05rem; margin-bottom: 4px; font-weight: 700; }
-        .card-overlay p { color: #db2777; font-size: 0.82rem; font-weight: bold; }
+        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 15px 12px 15px; }
+        .card-overlay h3 { color: #fff; font-size: 1rem; margin-bottom: 4px; }
+        .card-overlay p { color: #db2777; font-size: 0.8rem; font-weight: bold; }
 
-        /* Panel dinámico para otras pestañas */
-        .dynamic-view { display: none; background: #121826; border: 1px solid #1e293b; border-radius: 20px; padding: 30px; text-align: center; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; }
-        .dynamic-view h2 { font-size: 1.5rem; margin-bottom: 10px; color: #fff; }
-        .dynamic-view p { color: #94a3b8; font-size: 0.95rem; }
-
-        /* Barra de Navegación Inferior Móvil */
-        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b0f19; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; backdrop-filter: blur(10px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; font-size: 0.72rem; cursor: pointer; gap: 5px; font-weight: 500; transition: color 0.2s; }
-        .nav-item:hover, .nav-item.active { color: #db2777; }
-        .nav-icon { font-size: 1.25rem; }
+        /* Barra de navegación inferior */
+        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b0f19; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; font-size: 0.7rem; cursor: pointer; gap: 5px; font-weight: 500; }
+        .nav-item.active { color: #db2777; }
     </style>
 </head>
 <body>
@@ -75,162 +57,91 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <div class="logo-title">oii<span>oii</span> Studio</div>
-        <div class="top-badge">
-            <span>⚡ AI Core v2.4</span>
-        </div>
+        <div class="studio-badge">AI Engine v5.0</div>
     </div>
 
     <main>
-        <!-- Vista Explorar (Principal) -->
-        <div id="view-explorar" class="main-view">
-            <div class="creator-container">
-                <div class="creator-header">
-                    <h2 class="creator-title">Crear Historia Animada</h2>
-                    <span class="creator-badge-ai">Motor IA Activo</span>
-                </div>
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Transforma tus ideas y referencias visuales en secuencias de video completas.</p>
-                
-                <div class="form-grid">
-                    <div>
-                        <label for="animation-format">Formato de Video:</label>
-                        <select id="animation-format">
-                            <option value="story">Historia Cinematográfica (16:9)</option>
-                            <option value="short">Short / Reel Vertical (9:16)</option>
-                            <option value="stream">Alerta / Clip para Streamer</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="render-engine">Modelo de IA:</label>
-                        <select id="render-engine">
-                            <option value="oiioii-v3">Oiioii Motion Ultra v3</option>
-                            <option value="anime-net">AnimeCore Gen-X</option>
-                            <option value="cinematic">Pixar / 3D Render Engine</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="dropzone" onclick="alert('Abriendo selector de archivos multimedia...')">
-                    📷 Toca aquí para subir imagen o guion gráfico base
-                </div>
-
-                <label for="story-prompt">Descripción de la escena o animación:</label>
-                <textarea class="prompt-input" rows="3" id="story-prompt" placeholder="Ej: Un joven aventurero descubriendo un portal místico en un bosque flotante con partículas de neón..."></textarea>
-                
-                <button class="btn-generate" onclick="procesarAnimacionIA()">Generar Video con IA 🎬</button>
-            </div>
-
-            <!-- Galería de Estilos Destacados -->
-            <div class="section-title">
-                Estilos de Animación
-                <span onclick="alert('Mostrando catálogo completo de estilos...')">Ver todos &rarr;</span>
-            </div>
+        <!-- Creador Principal -->
+        <div class="creator-box">
+            <h2>Crear Historia Animada</h2>
+            <p>Sube una imagen de referencia y describe los detalles de tu escena.</p>
             
-            <div class="carousel">
-                <div class="style-card" onclick="seleccionarEstilo('Anime Japonés')">
-                    <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Estilo Anime">
-                    <div class="card-overlay">
-                        <h3>Anime Japonés</h3>
-                        <p>Aplicar estilo ✨</p>
-                    </div>
-                </div>
+            <div class="dropzone" onclick="alert('Selecciona una imagen multimedia...')">
+                📷 Toca aquí para cargar imagen base
+            </div>
 
-                <div class="style-card" onclick="seleccionarEstilo('Dibujos Animados')">
-                    <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Estilo Dibujos Animados">
-                    <div class="card-overlay">
-                        <h3>Dibujos Animados</h3>
-                        <p>Aplicar estilo ✨</p>
-                    </div>
-                </div>
+            <textarea class="prompt-input" rows="3" id="story-prompt" placeholder="Ej: Un joven héroe con armadura cyberpunk explorando ruinas futuristas..."></textarea>
+            
+            <button class="btn-generate" onclick="crearVideo()">Generar Video con IA 🎬</button>
+        </div>
 
-                <div class="style-card" onclick="seleccionarEstilo('Animación 3D')">
-                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Estilo 3D">
-                    <div class="card-overlay">
-                        <h3>Animación 3D</h3>
-                        <p>Aplicar estilo ✨</p>
-                    </div>
-                </div>
-
-                <div class="style-card" onclick="seleccionarEstilo('Cyberpunk / Neón')">
-                    <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Estilo Cyberpunk">
-                    <div class="card-overlay">
-                        <h3>Cyberpunk / Neón</h3>
-                        <p>Aplicar estilo ✨</p>
-                    </div>
+        <!-- Galería de Estilos Destacados -->
+        <h3 class="section-header">Estilos de Animación</h3>
+        <div class="carousel">
+            
+            <div class="style-card" onclick="alert('Estilo seleccionado: Anime Japonés')">
+                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Anime">
+                <div class="card-overlay">
+                    <h3>Anime Japonés</h3>
+                    <p>Probar estilo ✨</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Vista Proyectos -->
-        <div id="view-proyectos" class="dynamic-view">
-            <h2>📁 Mis Proyectos</h2>
-            <p>Aquí se almacenarán todas tus historias animadas renderizadas y borradores guardados.</p>
-        </div>
+            <div class="style-card" onclick="alert('Estilo seleccionado: Dibujos Animados')">
+                <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cartoon">
+                <div class="card-overlay">
+                    <h3>Dibujos Animados</h3>
+                    <p>Probar estilo ✨</p>
+                </div>
+            </div>
 
-        <!-- Vista Recursos -->
-        <div id="view-recursos" class="dynamic-view">
-            <h2>🖼️ Recursos Multimedia</h2>
-            <p>Librería de imágenes de referencia, texturas, audios y efectos visuales para tus videos.</p>
-        </div>
+            <div class="style-card" onclick="alert('Estilo seleccionado: Animación 3D')">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="3D">
+                <div class="card-overlay">
+                    <h3>Animación 3D</h3>
+                    <p>Probar estilo ✨</p>
+                </div>
+            </div>
 
-        <!-- Vista Estilos -->
-        <div id="view-estilos" class="dynamic-view">
-            <h2>✨ Catálogo de Estilos</h2>
-            <p>Explora configuraciones avanzadas de renderizado y filtros artísticos impulsados por IA.</p>
+            <div class="style-card" onclick="alert('Estilo seleccionado: Cyberpunk')">
+                <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cyberpunk">
+                <div class="card-overlay">
+                    <h3>Cyberpunk / Neón</h3>
+                    <p>Probar estilo ✨</p>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <!-- Barra de Navegación Inferior -->
     <nav class="bottom-nav">
-        <div class="nav-item active" id="nav-explorar" onclick="cambiarVista('explorar')">
-            <span class="nav-icon">🏠</span>
+        <div class="nav-item active" onclick="alert('Explorar')">
+            <span style="font-size: 1.2rem;">🏠</span>
             <span>Explorar</span>
         </div>
-        <div class="nav-item" id="nav-proyectos" onclick="cambiarVista('proyectos')">
-            <span class="nav-icon">📁</span>
+        <div class="nav-item" onclick="alert('Proyectos')">
+            <span style="font-size: 1.2rem;">📁</span>
             <span>Proyectos</span>
         </div>
-        <div class="nav-item" id="nav-recursos" onclick="cambiarVista('recursos')">
-            <span class="nav-icon">🖼️</span>
+        <div class="nav-item" onclick="alert('Recursos')">
+            <span style="font-size: 1.2rem;">🖼️</span>
             <span>Recursos</span>
         </div>
-        <div class="nav-item" id="nav-estilos" onclick="cambiarVista('estilos')">
-            <span class="nav-icon">✨</span>
+        <div class="nav-item" onclick="alert('Estilos')">
+            <span style="font-size: 1.2rem;">✨</span>
             <span>Estilos</span>
         </div>
     </nav>
 
     <script>
-        function cambiarVista(vista) {
-            document.querySelectorAll('.main-view, .dynamic-view').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            if (vista === 'explorar') {
-                document.getElementById('view-explorar').style.display = 'block';
-                document.getElementById('nav-explorar').classList.add('active');
-            } else if (vista === 'proyectos') {
-                document.getElementById('view-proyectos').style.display = 'flex';
-                document.getElementById('nav-proyectos').classList.add('active');
-            } else if (vista === 'recursos') {
-                document.getElementById('view-recursos').style.display = 'flex';
-                document.getElementById('nav-recursos').classList.add('active');
-            } else if (vista === 'estilos') {
-                document.getElementById('view-estilos').style.display = 'flex';
-                document.getElementById('nav-estilos').classList.add('active');
-            }
-        }
-
-        function seleccionarEstilo(nombreEstilo) {
-            document.getElementById('story-prompt').value = "Estilo " + nombreEstilo + ": ";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function procesarAnimacionIA() {
+        function crearVideo() {
             const prompt = document.getElementById('story-prompt').value;
             if(!prompt.trim()) {
-                alert("Por favor escribe una descripción para tu historia animada.");
+                alert("Por favor escribe una descripción para tu animación.");
                 return;
             }
-            alert("🪄 Iniciando renderizado de video con IA... Tu historia está siendo animada.");
+            alert("🪄 Procesando historia animada: \"" + prompt + "\"...");
         }
     </script>
 
