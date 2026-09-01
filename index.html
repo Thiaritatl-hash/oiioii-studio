@@ -1,342 +1,459 @@
-<!doctype html>
-<html lang="es" translate="no" class="notranslate" data-theme="dark" data-theme-preference="dark">
+<!DOCTYPE html>
+<html lang="es" class="dark">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Oiioii Studio - AI Animation Hub</title>
-    <meta name="description" content="Oiioii Studio — Plataforma profesional de animación e historias con IA">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oiioii Studio - Motor de Cine e IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#000000',
+                            card: '#0a0a0a',
+                            border: '#1f1f1f',
+                            fuchsia: '#db2777',
+                            purple: '#9333ea',
+                            hover: '#161616'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #000000; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 85px; }
-        
-        /* Barra superior */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #080808; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
-        .logo-title { font-weight: 800; color: #ffffff; font-size: 1.4rem; letter-spacing: -0.5px; }
-        .logo-title span { color: #db2777; }
-        .studio-badge { background: #141414; color: #db2777; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid #db2777; }
-        .credits-counter { background: #121212; color: #a855f7; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid #9333ea; display: flex; align-items: center; gap: 5px; }
-
-        /* Contenido principal */
-        main { padding: 24px 16px; flex: 1; max-width: 960px; margin: 0 auto; width: 100%; }
-
-        /* Vistas de la aplicación */
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-
-        /* Creador Principal */
-        .creator-box { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 20px; padding: 24px; margin-bottom: 32px; box-shadow: 0 0 30px rgba(219, 39, 119, 0.05); }
-        .creator-box h2 { font-size: 1.3rem; margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; align-items: center; }
-        .creator-box p { color: #888888; font-size: 0.95rem; margin-bottom: 20px; }
-        
-        .dropzone { border: 2px dashed #262626; border-radius: 12px; padding: 20px; text-align: center; background: #000000; color: #888888; cursor: pointer; transition: border-color 0.2s; font-size: 0.9rem; margin-bottom: 16px; }
-        .dropzone:hover { border-color: #db2777; color: #fff; }
-        
-        .prompt-container { position: relative; margin-bottom: 16px; }
-        .prompt-input { width: 100%; background: #000000; border: 1px solid #262626; border-radius: 12px; padding: 16px; padding-right: 48px; color: white; font-size: 1rem; resize: none; outline: none; }
-        .prompt-input:focus { border-color: #db2777; }
-        .btn-dice { position: absolute; right: 12px; top: 14px; background: transparent; border: none; font-size: 1.3rem; cursor: pointer; transition: transform 0.2s; }
-        .btn-dice:hover { transform: scale(1.2); }
-
-        /* Panel de Control de Parámetros */
-        .control-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .control-group { background: #000000; border: 1px solid #262626; border-radius: 12px; padding: 12px; }
-        .control-group label { display: block; font-size: 0.75rem; color: #888888; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; }
-        .control-select { width: 100%; background: #0c0c0c; color: white; border: 1px solid #333; padding: 8px; border-radius: 8px; font-size: 0.9rem; outline: none; }
-        .control-select:focus { border-color: #db2777; }
-
-        .btn-generate { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 6px 20px rgba(219, 39, 119, 0.4); }
-        .btn-generate:hover { opacity: 0.95; }
-
-        /* Línea de tiempo de escenas */
-        .timeline-box { background: #080808; border: 1px solid #1a1a1a; border-radius: 16px; padding: 16px; margin-top: 20px; }
-        .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .timeline-header h4 { font-size: 0.95rem; color: #fff; }
-        .btn-add-scene { background: #141414; color: #db2777; border: 1px solid #db2777; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .scenes-list { display: flex; flex-direction: column; gap: 8px; }
-        .scene-card { background: #000; border: 1px solid #262626; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #ccc; }
-        .scene-card span { color: #db2777; font-weight: 600; }
-
-        /* Comparador de Estilos */
-        .comparator-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .comparator-pane { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 14px; padding: 14px; text-align: center; }
-        .comparator-pane h5 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
-        .comparator-pane img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
-
-        /* Estado Vacío (Sin proyectos) */
-        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
-        .empty-state span { font-size: 3rem; display: block; margin-bottom: 12px; }
-        .empty-state h4 { color: #fff; font-size: 1.1rem; margin-bottom: 6px; }
-        .empty-state p { font-size: 0.9rem; color: #888; }
-
-        /* Estructura de Galerías */
-        .section-header { font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; color: #f8fafc; }
-        .gallery-category { margin-bottom: 36px; }
-        .category-title { font-size: 1.05rem; color: #888888; margin-bottom: 16px; font-weight: 600; }
-
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 18px; }
-        .grid-item { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 16px; overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.2s; position: relative; }
-        .grid-item:hover { border-color: #db2777; transform: translateY(-4px); }
-        .grid-item img { width: 100%; height: 115px; object-fit: cover; display: block; background-color: #141414; }
-        .grid-item-content { padding: 12px; }
-        .grid-item-content h4 { font-size: 0.9rem; color: #fff; margin-bottom: 4px; font-weight: 700; }
-        .grid-item-content p { font-size: 0.78rem; color: #db2777; font-weight: 600; line-height: 1.3; }
-
-        /* Paneles Estándar */
-        .content-panel { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
-        .content-panel h2 { font-size: 1.4rem; margin-bottom: 8px; color: #fff; }
-        .content-panel p { color: #888888; font-size: 0.95rem; }
-
-        /* Barra de Navegación Inferior */
-        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000000; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #777777; font-size: 0.75rem; cursor: pointer; gap: 5px; font-weight: 500; transition: color 0.2s; }
-        .nav-item:hover, .nav-item.active { color: #db2777; }
+        body { background-color: #000000; color: #ffffff; font-family: system-ui, -apple-system, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1f1f1f; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #db2777; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-fuchsia selection:text-white">
 
-    <!-- Barra Superior -->
-    <div class="top-bar">
-        <div class="logo-title">oii<span>oii</span> Studio</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="credits-counter">⚡ 1,500 Créditos</div>
-            <div class="studio-badge">Director v5.5</div>
+    <!-- BARRA SUPERIOR FIJA -->
+    <header class="sticky top-0 z-50 bg-brand-black/90 backdrop-blur-md border-b border-brand-border px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <h1 class="text-2xl font-black tracking-wider uppercase text-white">
+                OIIOII <span class="text-brand-fuchsia">STUDIO</span>
+            </h1>
+            <span class="hidden sm:inline-block px-2.5 py-1 text-xs font-semibold bg-brand-border text-brand-fuchsia rounded-full border border-brand-fuchsia/30">
+                Director v5.5
+            </span>
         </div>
-    </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-zinc-400 hidden md:inline">Modo Cine Activo</span>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-fuchsia to-brand-purple flex items-center justify-center font-bold text-sm shadow-lg shadow-brand-fuchsia/20">
+                OS
+            </div>
+        </div>
+    </header>
 
-    <main>
+    <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 pb-28">
+
         <!-- VISTA 1: EXPLORAR -->
-        <div id="view-explorar" class="view-section active">
-            <div class="creator-box">
-                <h2>Crear Animación o Largometraje <span>🎬</span></h2>
-                <p>Escribe tu historia, configura la duración y activa la IA para producir tu obra maestra.</p>
+        <section id="view-explorar" class="space-y-8">
+            <!-- Creator Box -->
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute -right-20 -top-20 w-60 h-60 bg-brand-fuchsia/10 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <div class="dropzone" onclick="alert('Selecciona imagen de referencia o guion gráfico...')">
-                    📷 Cargar diseño base o guion gráfico del personaje
-                </div>
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-fuchsia"></i> Centro de Creación de Largometrajes
+                </h2>
 
-                <div class="prompt-container">
-                    <textarea class="prompt-input" rows="4" id="story-prompt" placeholder="Ej: Un joven héroe con armadura cyberpunk explorando ruinas futuristas en un largometraje épico..."></textarea>
-                    <button class="btn-dice" onclick="generarInspiracion()" title="Generar idea aleatoria">🎲</button>
-                </div>
-
-                <div class="control-panel-grid">
-                    <div class="control-group">
-                        <label>Duración del Proyecto</label>
-                        <select class="control-select" id="project-duration">
-                            <option value="clip">Micro-clip (5s - 30s)</option>
-                            <option value="corto">Cortometraje (5 - 15 min)</option>
-                            <option value="pelicula" selected>Largometraje (60 - 100+ min)</option>
-                        </select>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Dropzone -->
+                    <div id="dropzone" class="border-2 border-dashed border-brand-border hover:border-brand-fuchsia rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all bg-brand-black/40 group">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-zinc-500 group-hover:text-brand-fuchsia mb-2 transition-colors"></i>
+                        <p class="text-sm text-zinc-300 font-medium">Sube tu referencia o guion gráfico</p>
+                        <p class="text-xs text-zinc-500 mt-1">PNG, JPG, MP4 (Máx. 500MB)</p>
+                        <input type="file" id="file-input" class="hidden" accept="image/*,video/*">
                     </div>
-                    <div class="control-group">
-                        <label>Relación de Aspecto</label>
-                        <select class="control-select" id="project-aspect">
-                            <option value="cine">Cine Panorámico (2.39:1)</option>
-                            <option value="youtube">Horizontal YouTube (16:9)</option>
-                            <option value="vertical">Vertical Redes (9:16)</option>
-                        </select>
+
+                    <!-- Prompt Box & Controles -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="relative">
+                            <textarea id="prompt-input" rows="3" placeholder="Describe tu escena cinemática (ej. Viaje en una megaciudad cyberpunk con lluvia intensa y neón fucsia...)" class="w-full bg-brand-black border border-brand-border rounded-xl p-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-brand-fuchsia transition-colors resize-none"></textarea>
+                            <button onclick="generarPromptAleatorio()" title="Generar idea aleatoria" class="absolute right-3 bottom-3 text-zinc-400 hover:text-brand-fuchsia p-2 transition-colors">
+                                <i class="fa-solid fa-dice text-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase tracking-wider">Duración del Proyecto</label>
+                                <select id="duracion-select" class="w-full bg-brand-black border border-brand-border rounded-lg p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-brand-fuchsia">
+                                    <option value="Micro-clip (5s-30s)">Micro-clip (5s-30s)</option>
+                                    <option value="Cortometraje (5-15 min)">Cortometraje (5-15 min)</option>
+                                    <option value="Largometraje (60-100+ min)" selected>Largometraje (60-100+ min)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-zinc-400 mb-1 uppercase tracking-wider">Relación de Aspecto</label>
+                                <select id="aspecto-select" class="w-full bg-brand-black border border-brand-border rounded-lg p-2.5 text-sm text-zinc-200 focus:outline-none focus:border-brand-fuchsia">
+                                    <option value="Cine Panorámico (2.39:1)">Cine Panorámico (2.39:1)</option>
+                                    <option value="Horizontal YouTube (16:9)">Horizontal YouTube (16:9)</option>
+                                    <option value="Vertical Redes (9:16)">Vertical Redes (9:16)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="ejecutarGeneracionProduccion()" class="w-full py-3.5 bg-gradient-to-r from-brand-fuchsia to-brand-purple hover:opacity-90 font-bold text-white rounded-xl shadow-lg shadow-brand-fuchsia/25 transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm">
+                            <i class="fa-solid fa-clapperboard"></i> Generar Producción con IA
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <button class="btn-generate" onclick="crearVideo()">Generar Producción con IA ✨</button>
-
-                <div class="timeline-box">
-                    <div class="timeline-header">
-                        <h4>Línea de Tiempo de Escenas (Acto I)</h4>
-                        <button class="btn-add-scene" onclick="agregarEscena()">+ Escena</button>
-                    </div>
-                    <div class="scenes-list" id="scenes-container">
-                        <div class="scene-card"><span>Escena 01</span> Introducción a la Megaciudad (00:00 - 15:00)</div>
-                        <div class="scene-card"><span>Escena 02</span> El despertar del Guerrero (15:00 - 45:00)</div>
+            <!-- Línea de Tiempo de Escenas -->
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-timeline text-brand-purple"></i> Línea de Tiempo de Escenas
+                    </h3>
+                    <button onclick="agregarEscena()" class="text-xs bg-brand-border hover:bg-brand-hover text-brand-fuchsia border border-brand-fuchsia/30 px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Añadir Escena (+15 min)
+                    </button>
+                </div>
+                <div id="timeline-container" class="flex gap-4 overflow-x-auto pb-2">
+                    <div class="min-w-[220px] bg-brand-black border border-brand-fuchsia rounded-xl p-4 flex flex-col justify-between shrink-0">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-brand-fuchsia">ACTO I</span>
+                                <span class="text-[10px] text-zinc-500">00:00 - 15:00</span>
+                            </div>
+                            <h4 class="text-sm font-semibold text-white">Introducción a la Megaciudad</h4>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between text-xs text-zinc-400">
+                            <span>Render OK</span>
+                            <i class="fa-solid fa-circle-check text-brand-fuchsia"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <h3 class="section-header">Comparativa de Estilos en Vivo</h3>
-            <div class="comparator-box">
-                <div class="comparator-pane">
-                    <h5>Opción A: Shonen Anime</h5>
-                    <img src="https://picsum.photos/seed/animecomp/500/300" alt="Anime">
-                    <button class="btn-add-scene" style="width:100%;" onclick="seleccionarEstilo('Shonen Anime')">Elegir Este</button>
-                </div>
-                <div class="comparator-pane">
-                    <h5>Opción B: Pixar 3D</h5>
-                    <img src="https://picsum.photos/seed/pixarcomp/500/300" alt="3D">
-                    <button class="btn-add-scene" style="width:100%;" onclick="seleccionarEstilo('Pixar 3D')">Elegir Este</button>
-                </div>
-            </div>
-
-            <h3 class="section-header">Explorador de Producción IA</h3>
-
-            <div class="gallery-category">
-                <h4 class="category-title">🔥 Estilos en Tendencia</h4>
-                <div class="gallery-grid">
-                    <div class="grid-item" onclick="seleccionarEstilo('Shonen Anime')">
-                        <img src="https://picsum.photos/seed/shonenanime/500/300" alt="Anime">
-                        <div class="grid-item-content"><h4>Shonen Anime</h4><p>Estilo Japonés</p></div>
+            <!-- Comparativa de Estilos en Vivo (Split-Screen) -->
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-columns text-brand-fuchsia"></i> Comparativa de Estilos en Vivo
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div onclick="aplicarEstiloComparativo('Shonen Anime Moderno')" class="relative rounded-xl overflow-hidden group cursor-pointer border border-brand-border hover:border-brand-fuchsia transition-all h-48">
+                        <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop" alt="Shonen Anime" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent flex flex-col justify-end p-4">
+                            <span class="text-xs text-brand-fuchsia font-bold uppercase tracking-wider">Estilo A</span>
+                            <h4 class="text-base font-bold text-white">Shonen Anime Moderno</h4>
+                        </div>
                     </div>
-                    <div class="grid-item" onclick="seleccionarEstilo('Pixar 3D')">
-                        <img src="https://picsum.photos/seed/pixar3d/500/300" alt="3D">
-                        <div class="grid-item-content"><h4>Pixar 3D</h4><p>Render CGI</p></div>
-                    </div>
-                    <div class="grid-item" onclick="seleccionarEstilo('Cyberpunk Noir')">
-                        <img src="https://picsum.photos/seed/cyberpunknoir/500/300" alt="Cyberpunk">
-                        <div class="grid-item-content"><h4>Cyberpunk</h4><p>Neón y Futurista</p></div>
-                    </div>
-                    <div class="grid-item" onclick="seleccionarEstilo('Acuarela Tradicional')">
-                        <img src="https://picsum.photos/seed/watercolor/500/300" alt="Acuarela">
-                        <div class="grid-item-content"><h4>Acuarela</h4><p>Pintura Fluida</p></div>
+                    <div onclick="aplicarEstiloComparativo('Pixar 3D Cinematic')" class="relative rounded-xl overflow-hidden group cursor-pointer border border-brand-border hover:border-brand-purple transition-all h-48">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Pixar 3D" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent flex flex-col justify-end p-4">
+                            <span class="text-xs text-brand-purple font-bold uppercase tracking-wider">Estilo B</span>
+                            <h4 class="text-base font-bold text-white">Pixar 3D Cinematic</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- VISTA 2: PROYECTOS (Dinámica: Vacía al inicio) -->
-        <div id="view-proyectos" class="view-section">
-            <div class="content-panel">
-                <h2>📁 Mis Proyectos y Largometrajes</h2>
-                <p>Gestiona tus películas animadas guardadas, borradores y renderizados de larga duración.</p>
-            </div>
-            
-            <div id="user-projects-container">
-                <div class="empty-state">
-                    <span>📂</span>
-                    <h4>No hay proyectos creados</h4>
-                    <p>Tus películas y animaciones generadas aparecerán aquí automáticamente.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- VISTA 3: RECURSOS -->
-        <div id="view-recursos" class="view-section">
-            <div class="content-panel">
-                <h2>🖼️ Librería de Recursos</h2>
-                <p>Usa escenarios, personajes fijos y efectos para mantener consistencia.</p>
-            </div>
-
-            <div class="gallery-category">
-                <h4 class="category-title">🏙️ Escenarios para Largometrajes</h4>
-                <div class="gallery-grid">
-                    <div class="grid-item" onclick="usarRecurso('Fondo: Megaciudad Neón')">
-                        <img src="https://picsum.photos/seed/neontown/500/300" alt="Ciudad Neón">
-                        <div class="grid-item-content"><h4>Megaciudad Neón</h4><p>Escenario Urbano</p></div>
+            <!-- Galerías Dinámicas con Fotos de Internet -->
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-brand-fuchsia"></i> Estilos en Tendencia
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="grid-tendencias">
+                        <!-- Inyectado por categoría con imágenes reales -->
                     </div>
-                    <div class="grid-item" onclick="usarRecurso('Fondo: Estación Espacial Orbital')">
-                        <img src="https://picsum.photos/seed/spacestation/500/300" alt="Estación Espacial">
-                        <div class="grid-item-content"><h4>Estación Espacial</h4><p>Escenario Sci-Fi</p></div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-city text-brand-purple"></i> Escenarios Destacados
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="grid-escenarios">
+                        <!-- Inyectado por categoría con imágenes reales -->
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- VISTA 4: ESTILOS -->
-        <div id="view-estilos" class="view-section">
-            <div class="content-panel">
-                <h2>✨ Catálogo Completo de Estilos</h2>
-                <p>Explora todos los modelos artísticos avanzados para renderizar tus producciones.</p>
+        <!-- VISTA 2: PROYECTOS -->
+        <section id="view-proyectos" class="hidden space-y-6">
+            <h2 class="text-2xl font-black">Mis Proyectos de Cine</h2>
+            <div id="proyectos-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Estado Vacío Inicial -->
+                <div id="estado-vacio" class="col-span-full border border-brand-border rounded-2xl p-12 text-center bg-brand-card">
+                    <i class="fa-solid fa-film text-4xl text-zinc-600 mb-3"></i>
+                    <h3 class="text-lg font-bold text-zinc-300">No hay largometrajes creados todavía</h3>
+                    <p class="text-sm text-zinc-500 mt-1 max-w-md mx-auto">Tus creaciones aparecerán aquí automáticamente tras hacer clic en "Generar Producción con IA".</p>
+                </div>
             </div>
+        </section>
 
-            <div class="gallery-category">
-                <h4 class="category-title">⛩️ Anime y Animación Japonesa</h4>
-                <div class="gallery-grid">
-                    <div class="grid-item" onclick="seleccionarEstilo('Shonen Moderno')">
-                        <img src="https://picsum.photos/seed/shonenmodern/500/300" alt="Shonen">
-                        <div class="grid-item-content"><h4>Shonen Moderno</h4><p>Líneas marcadas</p></div>
+        <!-- VISTA 3: CANVA STUDIO -->
+        <section id="view-canva" class="hidden space-y-6">
+            <h2 class="text-2xl font-black">Canva Studio (Modo Creativo Accesible)</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6 space-y-4">
+                    <h3 class="font-bold text-brand-fuchsia"><i class="fa-solid fa-wand-magic"></i> Plantillas Mágicas</h3>
+                    <p class="text-xs text-zinc-400">Selecciona una plantilla para cargar su prompt optimizado al instante:</p>
+                    <div class="space-y-3" id="canva-templates-list">
+                        <!-- Plantillas con imágenes -->
                     </div>
-                    <div class="grid-item" onclick="seleccionarEstilo('Studio Ghibli')">
-                        <img src="https://picsum.photos/seed/ghiblistyle/500/300" alt="Ghibli">
-                        <div class="grid-item-content"><h4>Studio Ghibli</h4><p>Pintura tradicional</p></div>
+                </div>
+                <div class="lg:col-span-2 bg-brand-card border border-brand-border rounded-2xl p-6 flex flex-col items-center justify-center min-h-[400px] text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')"></div>
+                    <div class="relative z-10 space-y-3">
+                        <i class="fa-solid fa-palette text-4xl text-brand-fuchsia"></i>
+                        <h3 class="text-xl font-bold">Lienzo Creativo Rápido</h3>
+                        <p class="text-sm text-zinc-400 max-w-sm">Arrastra elementos o aplica herramientas inteligentes de IA sin costo de suscripción.</p>
+                        <button onclick="alert('¡Lienzo activo! Elemento integrado al área de trabajo.')" class="px-4 py-2 bg-brand-fuchsia text-white rounded-lg text-xs font-bold uppercase tracking-wider">Abrir Editor Libre</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- VISTA 4: RECURSOS -->
+        <section id="view-recursos" class="hidden space-y-6">
+            <h2 class="text-2xl font-black">Recursos & Lorebook de Universo</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+                    <h3 class="font-bold text-brand-fuchsia mb-3"><span class="fa-solid fa-user-shield mr-2"></span>Fichas de Personajes (Character Sheets)</h3>
+                    <p class="text-xs text-zinc-400 mb-4">Mantén los rasgos faciales idénticos a lo largo de los 100 minutos.</p>
+                    <div class="grid grid-cols-2 gap-3" id="recursos-personajes"></div>
+                </div>
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-6">
+                    <h3 class="font-bold text-brand-purple mb-3"><span class="fa-solid fa-earth-americas mr-2"></span>Biblioteca de Escenarios Fijos</h3>
+                    <p class="text-xs text-zinc-400 mb-4">Fondos estables pre-renderizados para tomas de continuidad.</p>
+                    <div class="grid grid-cols-2 gap-3" id="recursos-escenarios"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 5: ESTILOS -->
+        <section id="view-estilos" class="hidden space-y-6">
+            <h2 class="text-2xl font-black">Catálogo Artístico & Dirección Avanzada</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6" id="estilos-catalogo-grid">
+                <!-- Inyectado dinámicamente con fotos de internet -->
+            </div>
+        </section>
+
     </main>
 
-    <!-- Barra de Navegación Inferior -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="cambiarVista('explorar', this)">
-            <span style="font-size: 1.2rem;">🏠</span>
-            <span>Explorar</span>
-        </div>
-        <div class="nav-item" onclick="cambiarVista('proyectos', this)">
-            <span style="font-size: 1.2rem;">📁</span>
-            <span>Proyectos</span>
-        </div>
-        <div class="nav-item" onclick="cambiarVista('recursos', this)">
-            <span style="font-size: 1.2rem;">🖼️</span>
-            <span>Recursos</span>
-        </div>
-        <div class="nav-item" onclick="cambiarVista('estilos', this)">
-            <span style="font-size: 1.2rem;">✨</span>
-            <span>Estilos</span>
-        </div>
+    <!-- NAVEGACIÓN INFERIOR FLOTANTE -->
+    <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-brand-card/90 backdrop-blur-md border border-brand-border px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-4">
+        <button onclick="cambiarVista('explorar')" id="nav-explorar" class="nav-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all bg-brand-fuchsia text-white flex items-center gap-2 shadow-md">
+            <i class="fa-solid fa-compass"></i> <span class="hidden sm:inline">Explorar</span>
+        </button>
+        <button onclick="cambiarVista('proyectos')" id="nav-proyectos" class="nav-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all text-zinc-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-film"></i> <span class="hidden sm:inline">Proyectos</span>
+        </button>
+        <button onclick="cambiarVista('canva')" id="nav-canva" class="nav-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all text-zinc-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> <span class="hidden sm:inline">Canva Studio</span>
+        </button>
+        <button onclick="cambiarVista('recursos')" id="nav-recursos" class="nav-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all text-zinc-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-box-archive"></i> <span class="hidden sm:inline">Recursos</span>
+        </button>
+        <button onclick="cambiarVista('estilos')" id="nav-estilos" class="nav-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all text-zinc-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-palette"></i> <span class="hidden sm:inline">Estilos</span>
+        </button>
     </nav>
 
     <script>
-        const ideasMagicas = [
-            "Un zorro samurái explorando un templo flotante en las nubes bajo un eclipse de sol.",
-            "Una tripulación de jóvenes científicos descubriendo una civilización submarina bioluminiscente.",
-            "Un androide rebelde tocando el violín en una azotea cyberpunk bajo una lluvia neón.",
-            "Un reino de caramelo amenazado por una bruja hecha de café oscuro y magia cósmica."
+        // Datos con imágenes cinemáticas reales de internet
+        const tendencias = [
+            { titulo: 'Cyberpunk Neon', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop', prompt: 'Estilo Cyberpunk neón futurista con alta saturación' },
+            { titulo: 'Anime Shonen', img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500&auto=format&fit=crop', prompt: 'Estilo Anime Shonen de acción dinámica' },
+            { titulo: 'Pixar 3D', img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=500&auto=format&fit=crop', prompt: 'Estilo renderizado 3D animado tierno y detallado' },
+            { titulo: 'Ghibli Fantasy', img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500&auto=format&fit=crop', prompt: 'Estilo fantasía tradicional acuarela cinematográfica' }
         ];
 
-        // Almacén local de proyectos del usuario (inicia vacío)
-        let misProyectos = [];
+        const escenarios = [
+            { titulo: 'Megaciudad Orbital', img: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=500&auto=format&fit=crop' },
+            { titulo: 'Bosque Ancestral', img: 'https://images.unsplash.com/photo-1511497584788-876761142212?q=80&w=500&auto=format&fit=crop' },
+            { titulo: 'Laboratorio Secreto', img: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=500&auto=format&fit=crop' },
+            { titulo: 'Estación Espacial', img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=500&auto=format&fit=crop' }
+        ];
 
-        function cambiarVista(nombreVista, elementoNav) {
-            document.querySelectorAll('.view-section').forEach(seccion => {
-                seccion.classList.remove('active');
+        const canvaTemplates = [
+            { titulo: 'Póster de Cine Action', img: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=300&auto=format&fit=crop', prompt: 'Póster de cine épico con tipografía neón' },
+            { titulo: 'Banner YouTube Trailer', img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=300&auto=format&fit=crop', prompt: 'Banner cinematográfico horizontal para estreno' }
+        ];
+
+        const personajesRecursos = [
+            { nombre: 'Heroína Kaelen', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop' },
+            { nombre: 'Villano Cyber', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop' }
+        ];
+
+        const estilosCatalogo = [
+            { titulo: 'Shonen Moderno', img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=500&auto=format&fit=crop', desc: 'Líneas marcadas y alto dinamismo' },
+            { titulo: 'Studio Ghibli', img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=500&auto=format&fit=crop', desc: 'Paisajes pintados a mano y calidez' },
+            { titulo: 'Cyberpunk Noir', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop', desc: 'Sombras profundas y luces fucsias' }
+        ];
+
+        // Inicializar elementos visuales al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarGrid('grid-tendencias', tendencias, (item) => {
+                document.getElementById('prompt-input').value = item.prompt;
+                cambiarVista('explorar');
             });
-            document.getElementById('view-' + nombreVista).classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
+            renderizarGrid('grid-escenarios', escenarios, (item) => {
+                document.getElementById('prompt-input').value = `Escenario: ${item.titulo}`;
+                cambiarVista('explorar');
             });
-            if (elementoNav) {
-                elementoNav.classList.add('active');
-            }
+            renderizarCanvaTemplates();
+            renderizarRecursos();
+            renderizarEstilosCatalogo();
+
+            // Configurar dropzone click
+            document.getElementById('dropzone').addEventListener('click', () => {
+                document.getElementById('file-input').click();
+            });
+        });
+
+        function renderizarGrid(elementId, items, onClickCallback) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = items.map(item => `
+                <div onclick='(${onClickCallback})( ${JSON.stringify(item)} )' class="relative rounded-xl overflow-hidden group cursor-pointer border border-brand-border hover:border-brand-fuchsia transition-all h-36">
+                    <img src="${item.img}" alt="${item.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/30 to-transparent flex items-end p-3">
+                        <span class="text-xs font-bold text-white">${item.titulo}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function seleccionarEstilo(nombreEstilo) {
-            cambiarVista('explorar', document.querySelectorAll('.nav-item')[0]);
-            const promptBox = document.getElementById('story-prompt');
-            promptBox.value = "Estilo cinematográfico " + nombreEstilo + ": ";
-            promptBox.focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function renderizarCanvaTemplates() {
+            const container = document.getElementById('canva-templates-list');
+            container.innerHTML = canvaTemplates.map(tpl => `
+                <div onclick="alert('Plantilla aplicada: ${tpl.titulo}')" class="flex items-center gap-3 bg-brand-black border border-brand-border hover:border-brand-fuchsia p-2 rounded-xl cursor-pointer transition-all">
+                    <img src="${tpl.img}" class="w-16 h-12 object-cover rounded-lg">
+                    <div>
+                        <h4 class="text-xs font-bold text-white">${tpl.titulo}</h4>
+                        <span class="text-[10px] text-zinc-500">Prompt integrado</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function usarRecurso(nombreRecurso) {
-            cambiarVista('explorar', document.querySelectorAll('.nav-item')[0]);
-            const promptBox = document.getElementById('story-prompt');
-            promptBox.value = "Incluir " + nombreRecurso + " con consistencia de personaje: ";
-            promptBox.focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function renderizarRecursos() {
+            document.getElementById('recursos-personajes').innerHTML = personajesRecursos.map(p => `
+                <div class="relative rounded-xl overflow-hidden border border-brand-border h-28">
+                    <img src="${p.img}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-black to-transparent flex items-end p-2">
+                        <span class="text-[10px] font-bold text-white">${p.nombre}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('recursos-escenarios').innerHTML = escenarios.slice(0, 2).map(e => `
+                <div class="relative rounded-xl overflow-hidden border border-brand-border h-28">
+                    <img src="${e.img}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-black to-transparent flex items-end p-2">
+                        <span class="text-[10px] font-bold text-white">${e.titulo}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function generarInspiracion() {
-            const promptBox = document.getElementById('story-prompt');
-            const ideaAleatoria = ideasMagicas[Math.floor(Math.random() * ideasMagicas.length)];
-            promptBox.value = ideaAleatoria;
-            promptBox.focus();
+        function renderizarEstilosCatalogo() {
+            const container = document.getElementById('estilos-catalogo-grid');
+            container.innerHTML = estilosCatalogo.map(est => `
+                <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden hover:border-brand-fuchsia transition-all group">
+                    <div class="h-40 overflow-hidden">
+                        <img src="${est.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-sm text-white mb-1">${est.titulo}</h4>
+                        <p class="text-xs text-zinc-400">${est.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Sistema de Navegación Dinámica
+        function cambiarVista(vistaId) {
+            ['explorar', 'proyectos', 'canva', 'recursos', 'estilos'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`nav-${v}`).classList.remove('bg-brand-fuchsia', 'text-white', 'shadow-md');
+                document.getElementById(`nav-${v}`).classList.add('text-zinc-400');
+            });
+            document.getElementById(`view-${vistaId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${vistaId}`);
+            activeNav.classList.remove('text-zinc-400');
+            activeNav.classList.add('bg-brand-fuchsia', 'text-white', 'shadow-md');
+        }
+
+        // Funciones interactivas funcionales
+        function generarPromptAleatorio() {
+            const ideas = [
+                "Un viaje psicodélico por una estación orbital abandonada con iluminación morada.",
+                "Combate callejero bajo la lluvia con katanas de energía láser fucsia.",
+                "Un androide melancólico contemplando el atardecer sobre una megaciudad futurista."
+            ];
+            document.getElementById('prompt-input').value = ideas[Math.floor(Math.random() * ideas.length)];
         }
 
         function agregarEscena() {
-            const container = document.getElementById('scenes-container');
-            const totalEscenas = container.children.length + 1;
+            const container = document.getElementById('timeline-container');
+            const count = container.children.length + 1;
             const nuevaEscena = document.createElement('div');
-            nuevaEscena.className = 'scene-card';
-            nuevaEscena.innerHTML = `<span>Escena 0${totalEscenas}</span> Desarrollo de trama extendida (${(totalEscenas-1)*15}:00 - ${totalEscenas*15}:00)`;
-            container.appendChild(nuevaEscene = nuevaEscena);
+            nuevaEscena.className = "min-w-[220px] bg-brand-black border border-brand-border rounded-xl p-4 flex flex-col justify-between shrink-0";
+            nuevaEscena.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-brand-purple">ACTO ${count}</span>
+                        <span class="text-[10px] text-zinc-500">15:00 - 30:00</span>
+                    </div>
+                    <h4 class="text-sm font-semibold text-white">Escena Dinámica ${count}</h4>
+                </div>
+                <div class="mt-4 flex items-center justify-between text-xs text-zinc-400">
+                    <span>En cola</span>
+                    <i class="fa-solid fa-clock text-brand-fuchsia"></i>
+                </div>
+            `;
+            container.appendChild(nuevaEscena);
         }
 
-        function crearVideo() {
-            const prompt = document.getElementById('story-prompt').value;
-            const duracion = document.getElementById('project-duration').value;
-            
-            if(!prompt.trim()) {
-                alert("Por favor escribe una descripción para tu producción.");
-                return;
-            }
+        function aplicarEstiloComparativo(estiloNombre) {
+            const promptActual = document.getElementById('prompt-input').value;
+            document.getElementById('prompt-input').value = `${promptActual} [Estilo aplicado: ${estiloNombre}]`;
+            alert(`¡Estilo "${estiloNombre}" aplicado al prompt de producción!`);
+        }
 
-       
+        function ejecutarGeneracionProduccion() {
+            const prompt = document.getElementById('prompt-input').value || "Largometraje Oiioii Studio Cinematic";
+            const duracion = document.getElementById('duracion-select').value;
+            
+            // Ocultar estado vacío en proyectos
+            document.getElementById('estado-vacio').style.display = 'none';
+
+            // Crear tarjeta en la vista de proyectos
+            const proyContainer = document.getElementById('proyectos-container');
+            const card = document.createElement('div');
+            card.className = "bg-brand-card border border-brand-border rounded-2xl overflow-hidden hover:border-brand-fuchsia transition-all";
+            card.innerHTML = `
+                <div class="h-40 relative">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop" class="w-full h-full object-cover">
+                    <span class="absolute top-3 right-3 bg-brand-black/80 px-2.5 py-1 rounded-full text-[10px] font-bold text-brand-fuchsia">${duracion}</span>
+                </div>
+                <div class="p-4 space-y-2">
+                    <h4 class="font-bold text-sm text-white truncate">${prompt}</h4>
+                    <div class="flex items-center justify-between text-xs text-zinc-500">
+                        <span>Renderizado Completo</span>
+                        <i class="fa-solid fa-circle-check text-brand-fuchsia"></i>
+                    </div>
+                </div>
+            `;
+            proyContainer.appendChild(card);
+
+            alert("¡Producción iniciada y guardada exitosamente en la sección Proyectos!");
+            cambiarVista('proyectos');
+        }
+    </script>
+</body>
+</html>
