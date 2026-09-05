@@ -510,4 +510,21 @@ No text, no logos, no watermarks.
                   setPrompt(idea);
                   setError("");
                 }}
-                className="text-left p-4 rounded-xl border border-zinc-900 bg-z
+                className="text-left p-4 rounded-xl border border-zinc-900 bg-zinc-950 hover:border-zinc-700 hover:bg-zinc-900/50 transition group flex flex-col justify-between"
+              >
+                <p className="text-xs text-zinc-300 group-hover:text-white transition line-clamp-2">
+                  "{idea}"
+                </p>
+                <span className="text-[10px] text-pink-500/80 font-semibold mt-3 flex items-center gap-1">
+                  Usar idea →
+                </span>
+              </button>
+            ))}
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  );
+}
